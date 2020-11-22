@@ -17,15 +17,26 @@ void Var::_clearVar(){
     default:    //no need to clear
         break;
     }
-
     //clear
     this->variable._type = this->NullType;
     this->variable.value.n = nullptr;
 
 }
 
+void Var::__tab(int k){
+    for(int i = 0; i < k; i++){
+        cout << "    ";
+    }
+}
+
 //Methods:
-void Var::print(bool endLine){
+void Var::print(bool pretty, bool endLine){
+    static int recursive_depth = -1;
+    recursive_depth++;
+
+    if(pretty && (this->variable._type != ListType)) 
+        __tab(recursive_depth);
+
     switch (this->variable._type)
     {
     case this->NullType:
@@ -47,14 +58,29 @@ void Var::print(bool endLine){
         std::cout <<  '\"' <<*this->variable.value.s << '\"';
         break;
     case this->ListType:
-        std::cout << '{';
-        for (std::vector<Var>::iterator x = this->variable.value.l->begin(); x != this->variable.value.l->end(); ++x){
-            std::cout << ' ';
-            x->print(false);
-
-            
+        if (pretty){
+            //Prints in cascade (JSON-like)
+            __tab(recursive_depth);
+            std::cout << '{' << endl;
+            for (size_t i=0; i < this->variable.value.l->size(); i++){
+                this->variable.value.l->at(i).print(true, true);
+            }
+            __tab(recursive_depth);
+            std::cout << '}';
         }
-        std::cout << '}';
+        else{
+            //Prints horizontal
+            std::cout << '{';
+            for (size_t i=0; i < this->variable.value.l->size(); i++){
+                std::cout << ' ';
+                this->variable.value.l->at(i).print(false, false);
+                if (i < this->variable.value.l->size() - 1){
+                    cout << ',';
+                }
+            }
+            std::cout << '}';
+        }
+        
         break;
     case this->DictType:
         //TODO
@@ -64,7 +90,9 @@ void Var::print(bool endLine){
         break;
     }
 
-    if(endLine) printf("\n");
+    if(endLine) cout << endl;
+
+    recursive_depth--;
 }
 
 void Var::printType(bool endLine){
@@ -102,9 +130,73 @@ void Var::printType(bool endLine){
     if(endLine) printf("\n");
 }
 
+//Inner operation functions:
+Var Var::_addition(Var &a, Var &b){
+    Var result;
+    switch (this->variable._type)
+    {
+    case this->NullType:
+        //error
+        break;
+    case this->CharType:
+        
+        break;
+    case this->IntType:
+        
+        break;
+    case this->FloatType:
+        
+        break;
+    case this->BooleanType:
+        
+        break;
+    case this->StringType: 
+        
+        break;
+    case this->ListType:
+        
+        break;
+    case this->DictType:
+        
+        break;
+    default:
+        
+        break;
+    }
+
+}
 
 //Constructors and destructors:
 
 
 
+// switch (this->variable._type)
+//     {
+//     case this->NullType:
 
+//         break;
+//     case this->CharType:
+        
+//         break;
+//     case this->IntType:
+        
+//         break;
+//     case this->FloatType:
+        
+//         break;
+//     case this->BooleanType:
+        
+//         break;
+//     case this->StringType: 
+        
+//         break;
+//     case this->ListType:
+        
+//         break;
+//     case this->DictType:
+        
+//         break;
+//     default:
+        
+//         break;
+//     }

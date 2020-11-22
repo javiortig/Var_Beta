@@ -38,8 +38,7 @@ private:
     }variable;
     //inside methods
     void _clearVar();
-
-
+    void __tab(int k = 0); //couts a tab as many times as k
 
 public:
     //type constants
@@ -55,8 +54,9 @@ public:
     static constexpr int __VarType = 8;
 
     //methods:
-    void print(bool endLine = true);
+    void print(bool pretty = false, bool endLine = true);
     void printType(bool endLine = true);
+    
 
     //constructors and destructors:
     Var(){
@@ -222,6 +222,12 @@ private:
         }
     };
     
+//inner operation functions:
+    Var _addition(Var &a, Var &b);
+    void __number_addition(Var *result, Var &a, Var &b);
+    void __char_addition(Var *result, Var &a, Var &b);
+    void __char_addition(Var *result, Var &a, Var &b);
+    //TODO: MAS
 
 public:
     //Template operators:
@@ -229,11 +235,21 @@ public:
     void operator=(Var &v){
         this->_clearVar();
         this->_convertToVar(this, v);
-    }
+    };
 
     template<class Any> 
     void operator=(Any v){
         this->_clearVar();
+        this->_convertToVar(this, v);
+    };
+
+    // addition
+    void operator+(Var &v){
+        
+    };
+
+    template<class Any> 
+    void operator+(Any v){
         this->_convertToVar(this, v);
     };
 
