@@ -9,9 +9,14 @@
 
 // using namespace std;
 /*
+    TODO: Reacer sin usar las clases de std pq se buguea la mem?
     TODO: arreglar nested vectors
-
     -TODO: throw errors and terminate program when invalid sumation, etc
+*/
+/*
+    Tip: se podria reducir lineas de codigo en los nested switches
+    de operaciones como adition utilizando la logica de una matriz 
+    triangular
 */
 
 #define N_VAR_TYPES 8
@@ -47,7 +52,7 @@ public:
     static constexpr int CharType = 1;
     static constexpr int IntType = 2;
     static constexpr int FloatType = 3;
-    static constexpr int BooleanType = 4;
+    static constexpr int BoolType = 4;
     static constexpr int StringType = 5;
     static constexpr int ListType = 6;
     static constexpr int DictType = 7;
@@ -111,7 +116,7 @@ private:
         }
         //Bool
         else if(typeHash == typeid(bool).hash_code()){
-            return this->BooleanType;
+            return this->BoolType;
         }
         //String
         else if(typeHash == typeid(char *).hash_code() ||
@@ -155,7 +160,7 @@ private:
         case FloatType:
             var->variable.value.f = v;
             break;
-        case BooleanType:
+        case BoolType:
             var->variable.value.b = (bool)v;
             break;
         default:
@@ -204,7 +209,7 @@ private:
         case this->FloatType:
             this->variable.value.f = v.variable.value.f;
             break;
-        case this->BooleanType:
+        case this->BoolType:
             this->variable.value.b = v.variable.value.b;
             break;
         case this->StringType: 
@@ -222,12 +227,16 @@ private:
         }
     };
     
-//inner operation functions:
+/*inner operation functions:*/
+    //general:
+        //float>char>int
+    void __number_basic_operation(Var *result, Var &a, Var &b, char _operation);
+
+    //addition:
     Var _addition(Var &a, Var &b);
-    void __number_addition(Var *result, Var &a, Var &b);
-    void __char_addition(Var *result, Var &a, Var &b);
-    void __char_addition(Var *result, Var &a, Var &b);
-    //TODO: MAS
+    void __string_addition(Var *result, Var &a, Var &b);//concatenation
+    void __list_addition(Var *result, Var &a, Var &b);//concatenation
+    
 
 public:
     //Template operators:
@@ -244,13 +253,15 @@ public:
     };
 
     // addition
-    void operator+(Var &v){
-        
+    Var operator+(Var &v){
+        return _addition(*this, v);
     };
-
     template<class Any> 
-    void operator+(Any v){
-        this->_convertToVar(this, v);
+    Var operator+(Any v){
+        Var b;
+        _convertToVar(&b, v);
+
+        return _addition(*this, b);
     };
 
 public:
@@ -262,7 +273,7 @@ private://inner functions of global functions such as list()
     template<class T, class... Args>
     void _list(Var *p, T t, Args... args){
         Var *v = new Var(t);
-        (p->variable.value.l)->push_back(*v);
+        p->variable.value.l->push_back(*v);
 
         _list(p ,args...);
     };
@@ -280,7 +291,7 @@ Var list(T t, Args... args){
     Var p;
     p.variable._type = p.ListType;
     p.variable.value.l = new std::vector<Var>();
-    
+
     p._list(&p , t, args...);
 
     return p;
