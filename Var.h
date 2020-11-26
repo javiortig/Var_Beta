@@ -9,7 +9,7 @@
 
 // using namespace std;
 /*
-    TODO: Reacer sin usar las clases de std pq se buguea la mem?
+    TODO: Rehacer sin usar las clases de std pq se buguea la mem?
     TODO: arreglar nested vectors
     -TODO: throw errors and terminate program when invalid sumation, etc
 */
@@ -69,6 +69,11 @@ public:
         this->variable.value.n = nullptr;
         this->variable._len = -1;
     };
+
+    Var(const Var &v){  //copy constructor
+        _convertToVar(this, v);
+    }; 
+
     template<class Any> 
     Var(Any v){
         _convertToVar(this, v);
@@ -185,38 +190,31 @@ private:
         var->variable.value.l = new vector<Var>(v);
     };
 
-    //general function to be called for C main types
-    template<class Any>
-    void _convertToVar(Var* var, Any v){
-        var->variable._type = __getVarTypeFromAnyType(v);
-        __convertCTypeToVar(var, v);
-    };
-
     void _convertToVar(Var* var, Var &v){
         var->variable._type = v.variable._type;
         var->variable._len = v.variable._len;
-        switch (this->variable._type)
-        {
+        
+        switch (this->variable._type){
         case this->NullType:
-            this->variable.value.n = nullptr;
+            var->variable.value.n = nullptr;
             break;
         case this->CharType:
-            this->variable.value.c = v.variable.value.c;
+            var->variable.value.c = v.variable.value.c;
             break;
         case this->IntType:
-            this->variable.value.i = v.variable.value.i;
+            var->variable.value.i = v.variable.value.i;
             break;
         case this->FloatType:
-            this->variable.value.f = v.variable.value.f;
+            var->variable.value.f = v.variable.value.f;
             break;
         case this->BoolType:
-            this->variable.value.b = v.variable.value.b;
+            var->variable.value.b = v.variable.value.b;
             break;
         case this->StringType: 
-            this->variable.value.s = new std::string(*v.variable.value.s);
+            var->variable.value.s = new std::string(*v.variable.value.s);
             break;
         case this->ListType:
-            this->variable.value.l = new std::vector<Var>(*v.variable.value.l);
+            var->variable.value.l = new std::vector<Var>(*v.variable.value.l);
             break;
         case this->DictType:
             //TODO
@@ -226,6 +224,13 @@ private:
             break;
         }
     };
+    //general function to be called for C main types
+    template<class Any>
+    void _convertToVar(Var* var, Any v){
+        var->variable._type = __getVarTypeFromAnyType(v);
+        __convertCTypeToVar(var, v);
+    };
+
     
 /*inner operation functions:*/
     //general:
@@ -258,6 +263,7 @@ public:
     };
     template<class Any> 
     Var operator+(Any v){
+        cout << "called" << endl;
         Var b;
         _convertToVar(&b, v);
 
@@ -267,7 +273,7 @@ public:
 public:
     //global functs that need friend
     template<class T, class... Args>
-    friend Var list(T t, Args... args);
+    friend Var list(T, Args...);
 
 private://inner functions of global functions such as list()
     template<class T, class... Args>
@@ -282,19 +288,11 @@ private://inner functions of global functions such as list()
     void _list(Var *p, T t){
         Var *v = new Var(t);
         (p->variable.value.l)->push_back(*v);
-    } 
+    };
 };
 
 //Global functions:
 template<class T, class... Args>
-Var list(T t, Args... args){
-    Var p;
-    p.variable._type = p.ListType;
-    p.variable.value.l = new std::vector<Var>();
-
-    p._list(&p , t, args...);
-
-    return p;
-}
+Var list(T t, Args... args);
 
 #endif

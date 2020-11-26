@@ -20,7 +20,7 @@ void Var::_clearVar(){
     //clear
     this->variable._type = this->NullType;
     this->variable.value.n = nullptr;
-
+    
 }
 
 void Var::__tab(int k){
@@ -468,6 +468,7 @@ void Var::__list_addition(Var *result, Var &_l, Var &any){
 //end addition
 
 //Constructors and destructors:
+
 
 /*
 
