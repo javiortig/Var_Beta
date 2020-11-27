@@ -13,3 +13,11 @@ Well, that might be true, but I like the idea of combining the simplicity of hig
 
 ### + Isn't this a waste of memory?
 It is, but I will always try to make variables use the least memory possible. IMO thought, efficiency is much more important in most of the cases. The Var type is not thought to be used in limited-memory projects
+
+### + Isn't std::any or std::variant what you are trying to achieve?
+It has very similar features, but i want to achieve the syntactical sugars I present in the main.cpp file. std::any/variant requires more typing/casting, etc etc. I want to create a Class that can be a dictionary, a list, a string, a char... All at once. again, check the main.cpp to see what I mean by 'syntactical sugars'.
+
+### + Isn't this very inefficient?
+It depends. If you are looking from a C perspective, it obviously is. There is nothing more efficient than using the C++ standards(in general terms). But in the other hand, if you compare it to languages such as python, this solution will be(one day, remember this is a messy beta far from waht i want to build) faster by orders of magnitude.
+
+for any questions/suggestions/ideas go check https://www.reddit.com/r/cpp/comments/k21syx/looking_for_ideasadvices_betavar_a_unique_type/
