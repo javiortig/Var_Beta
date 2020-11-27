@@ -1,17 +1,7 @@
 #include "Var.h"
 
 /*
-    Var type has the objective to micic the simplicity of Python/JS...
-    variables, but with all the good performance and elegance that
-    C++ offers.
-    Please before making any comment make sure you are aware that 
-    this is a small trial of the actual proyect I want to build.
-    This code is messy, redundant and untidy beacuse I just wanted to
-    get an idea, and try some stuff. The real proyect will be in a different
-    repo, started from scratch with a much better/cleaner aproach. 
-    It will obviously be Free Software.
-    Any ideas, opinions, better approaches will be welcomed, as long as
-    they are respectful and constructive. Thank you all in advance!
+    Make sure you first read the README.md file 
 */
 
 //This is a brief example to get an idea of what I'm trying to approach
@@ -65,4 +55,16 @@ int main(){
     examplePrint(v, 'v');
 
     return 0;
+}
+
+int main(){
+    Var a = "hello strin";
+    Var b = a;
+    b = a + 'g';
+    Var l = list(1, 2, b, list("nested", 'c', true, a));
+
+    Var n = 1;
+    Var f;
+    f = n + 5.675;
+
 }
