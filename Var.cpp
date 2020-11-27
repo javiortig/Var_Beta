@@ -1,8 +1,8 @@
 #include "Var.h"
 
 //inside methods:
-void Var::_clearVar(){
-    switch (this->variable._type)
+void Var::clearVar(){
+    switch (this->variable.type)
     {
     case this->StringType:
         //delete(this->variable.value.s);
@@ -18,7 +18,7 @@ void Var::_clearVar(){
         break;
     }
     //clear
-    this->variable._type = this->NullType;
+    this->variable.type = this->NullType;
     this->variable.value.n = nullptr;
 
 }
@@ -34,10 +34,10 @@ void Var::print(bool pretty, bool endLine){
     static int recursive_depth = -1;
     recursive_depth++;
 
-    if(pretty && (this->variable._type != ListType)) 
+    if(pretty && (this->variable.type != ListType)) 
         __tab(recursive_depth);
 
-    switch (this->variable._type)
+    switch (this->variable.type)
     {
     case this->NullType:
         std::cout << "Null";
@@ -96,7 +96,7 @@ void Var::print(bool pretty, bool endLine){
 }
 
 void Var::printType(bool endLine){
-    switch (this->variable._type)
+    switch (this->variable.type)
     {
     case this->NullType:
         printf("Null");
@@ -132,12 +132,12 @@ void Var::printType(bool endLine){
 
 /*Inner operation functions:*/
 //addition
-Var Var::_addition(Var &a, Var &b){
+Var Var::addition(Var &a, Var &b){
     Var result;
-    switch (a.variable._type)
+    switch (a.variable.type)
     {
     case this->NullType:
-        switch (b.variable._type)
+        switch (b.variable.type)
         {
         case this->NullType:
             //do nothing
@@ -149,10 +149,10 @@ Var Var::_addition(Var &a, Var &b){
             result = b;
             break;
         case this->StringType: 
-            __string_addition(&result, b, a);
+            stringAddition(&result, b, a);
             break;
         case this->ListType:
-            __list_addition(&result, b, a);
+            listAddition(&result, b, a);
             break;
         case this->DictType:
             
@@ -164,7 +164,7 @@ Var Var::_addition(Var &a, Var &b){
         break;
 
     case this->CharType:
-        switch (b.variable._type)
+        switch (b.variable.type)
         {
         case this->NullType:
             result = a;
@@ -172,16 +172,16 @@ Var Var::_addition(Var &a, Var &b){
         case this->CharType:
         case this->IntType:
         case this->FloatType:
-            __number_basic_operation(&result, a, b, '+');
+            numberBasicOperations(&result, a, b, '+');
             break;
         case this->BoolType:
             // Error
             break;
         case this->StringType: 
-            __string_addition(&result, b, a);
+            stringAddition(&result, b, a);
             break;
         case this->ListType:
-            __list_addition(&result, b, a);
+            listAddition(&result, b, a);
             break;
         case this->DictType:
             
@@ -193,23 +193,23 @@ Var Var::_addition(Var &a, Var &b){
         break;
 
     case this->IntType:
-        switch (b.variable._type){
+        switch (b.variable.type){
         case this->NullType:
             result = a;
             break;
         case this->CharType:
         case this->IntType:
         case this->FloatType:
-            __number_basic_operation(&result, a, b, '+');
+            numberBasicOperations(&result, a, b, '+');
             break;
         case this->BoolType:
             //error
             break;
         case this->StringType: 
-            __string_addition(&result, b, a);
+            stringAddition(&result, b, a);
             break;
         case this->ListType:
-            __list_addition(&result, b, a);
+            listAddition(&result, b, a);
             break;
         case this->DictType:
             
@@ -221,23 +221,23 @@ Var Var::_addition(Var &a, Var &b){
         break;
 
     case this->FloatType:
-        switch (b.variable._type){
+        switch (b.variable.type){
         case this->NullType:
             result = a;
             break;
         case this->CharType:
         case this->IntType:
         case this->FloatType:
-            __number_basic_operation(&result, a, b, '+');
+            numberBasicOperations(&result, a, b, '+');
             break;
         case this->BoolType:
             //error
             break;
         case this->StringType: 
-            __string_addition(&result, b, a);
+            stringAddition(&result, b, a);
             break;
         case this->ListType:
-            __list_addition(&result, b, a);
+            listAddition(&result, b, a);
             break;
         case this->DictType:
             
@@ -250,7 +250,7 @@ Var Var::_addition(Var &a, Var &b){
         break;
 
     case this->BoolType:
-        switch (this->variable._type)
+        switch (this->variable.type)
         {
         case this->NullType:
             result = a;
@@ -265,14 +265,14 @@ Var Var::_addition(Var &a, Var &b){
             //error
             break;
         case this->BoolType:
-            result.variable._type = BoolType;
+            result.variable.type = BoolType;
             result.variable.value.b = a.variable.value.b + b.variable.value.b;
             break;
         case this->StringType: 
             //error
             break;
         case this->ListType:
-            __list_addition(&result, b, a);
+            listAddition(&result, b, a);
             break;
         case this->DictType:
             
@@ -284,7 +284,7 @@ Var Var::_addition(Var &a, Var &b){
         break;
 
     case this->StringType: 
-        switch (this->variable._type)
+        switch (this->variable.type)
         {
         case this->NullType:
             result = a;
@@ -292,16 +292,16 @@ Var Var::_addition(Var &a, Var &b){
         case this->CharType:
         case this->IntType:
         case this->FloatType:
-            __string_addition(&result, a, b);
+            stringAddition(&result, a, b);
             break;
         case this->BoolType:
             //error
             break;
         case this->StringType: 
-            __string_addition(&result, a, b);
+            stringAddition(&result, a, b);
             break;
         case this->ListType:
-            __list_addition(&result, b, a);
+            listAddition(&result, b, a);
             break;
         case this->DictType:
             
@@ -313,7 +313,7 @@ Var Var::_addition(Var &a, Var &b){
         break;
 
     case this->ListType:
-        switch (this->variable._type)
+        switch (this->variable.type)
         {
         case this->NullType:
         case this->CharType:
@@ -322,7 +322,7 @@ Var Var::_addition(Var &a, Var &b){
         case this->BoolType:
         case this->StringType: 
         case this->ListType:
-            __list_addition(&result, a, b);
+            listAddition(&result, a, b);
             break;
         case this->DictType:
             
@@ -343,26 +343,26 @@ Var Var::_addition(Var &a, Var &b){
 
     return result;
 }
-void Var::__number_basic_operation(Var *result, Var &a, Var &b, char _operation){
+void Var::numberBasicOperations(Var *result, Var &a, Var &b, char _operation){
     switch (_operation)
     {
     case '+':     
-        switch (a.variable._type)
+        switch (a.variable.type)
         {
         case this->CharType:
-            switch (b.variable._type){
+            switch (b.variable.type){
             case this->CharType:
-                result->variable._type = CharType;
+                result->variable.type = CharType;
                 result->variable.value.c = a.variable.value.c + b.variable.value.c;
                 break;  
 
             case this->IntType:
-                result->variable._type = IntType;
+                result->variable.type = IntType;
                 result->variable.value.i = (long)a.variable.value.c + b.variable.value.i;
                 break;
 
             case this->FloatType:
-                result->variable._type = FloatType;
+                result->variable.type = FloatType;
                 result->variable.value.f = (double)a.variable.value.c + b.variable.value.f;
                 break;
             default:
@@ -372,19 +372,19 @@ void Var::__number_basic_operation(Var *result, Var &a, Var &b, char _operation)
             break;
 
         case this->IntType:
-            switch (b.variable._type){
+            switch (b.variable.type){
             case this->CharType:
-                result->variable._type = IntType;
+                result->variable.type = IntType;
                 result->variable.value.i = a.variable.value.i + (long)b.variable.value.c;
                 break;
 
             case this->IntType:
-                result->variable._type = IntType;
+                result->variable.type = IntType;
                 result->variable.value.i = a.variable.value.i + b.variable.value.i;
                 break;
 
             case this->FloatType:
-                result->variable._type = FloatType;
+                result->variable.type = FloatType;
                 result->variable.value.f = (double)a.variable.value.i + b.variable.value.f;
                 break;
 
@@ -395,18 +395,18 @@ void Var::__number_basic_operation(Var *result, Var &a, Var &b, char _operation)
             break;
 
         case this->FloatType:
-            switch (b.variable._type){
+            switch (b.variable.type){
             case this->CharType:
-                result->variable._type = FloatType;
+                result->variable.type = FloatType;
                 result->variable.value.f = a.variable.value.f + (double)b.variable.value.c;
                 break;
 
             case this->IntType:
-                result->variable._type = FloatType;
+                result->variable.type = FloatType;
                 result->variable.value.f = a.variable.value.f + (double)b.variable.value.i;
                 break;
             case this->FloatType:
-                result->variable._type = FloatType;
+                result->variable.type = FloatType;
                 result->variable.value.f = a.variable.value.f + b.variable.value.c;
                 break;
             default:
@@ -437,10 +437,10 @@ void Var::__number_basic_operation(Var *result, Var &a, Var &b, char _operation)
 
     
 }   //Var string must be string
-void Var::__string_addition(Var *result, Var &str, Var &any){
+void Var::stringAddition(Var *result, Var &str, Var &any){
     result->variable.value.s = new std::string(*str.variable.value.s);
-    result->variable._type = StringType;
-    switch (any.variable._type)
+    result->variable.type = StringType;
+    switch (any.variable.type)
     {
     case this->NullType:
         //Do nothing
@@ -459,9 +459,9 @@ void Var::__string_addition(Var *result, Var &str, Var &any){
         break;
     }
 }   //l must be a list
-void Var::__list_addition(Var *result, Var &_l, Var &any){
+void Var::listAddition(Var *result, Var &_l, Var &any){
     result->variable.value.l = new std::vector<Var>(*_l.variable.value.l);
-    result->variable._type = ListType;
+    result->variable.type = ListType;
 
     result->variable.value.l->push_back(any);
 }
@@ -471,7 +471,7 @@ void Var::__list_addition(Var *result, Var &_l, Var &any){
 
 /*
 
-switch (this->variable._type)
+switch (this->variable.type)
     {
     case this->NullType:
 

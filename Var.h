@@ -26,8 +26,8 @@ using namespace std;
 class Var{
 private:
     struct Value{
-        int _type;
-        size_t _len;
+        int type;
+        size_t len;
 
         union _Types{   // the hole union is only sizeof() the biggest type inside
             void* n;
@@ -42,7 +42,7 @@ private:
         }value;
     }variable;
     //inside methods
-    void _clearVar();
+    void clearVar();
     void __tab(int k = 0); //couts a tab as many times as k
 
 public:
@@ -56,7 +56,7 @@ public:
     static constexpr int StringType = 5;
     static constexpr int ListType = 6;
     static constexpr int DictType = 7;
-    static constexpr int __VarType = 8;
+    static constexpr int _VarType = 8;
 
     //methods:
     void print(bool pretty = false, bool endLine = true);
@@ -65,28 +65,28 @@ public:
 
     //constructors and destructors:
     Var(){
-        this->variable._type = NullType;
+        this->variable.type = NullType;
         this->variable.value.n = nullptr;
-        this->variable._len = -1;
+        this->variable.len = -1;
     };
     template<class Any> 
     Var(Any v){
-        _convertToVar(this, v);
+        convertToVar(this, v);
     };
 
     ~Var(){ 
-        this->_clearVar();
+        this->clearVar();
     };
 
 private:
 //Inside methods:
     template<class Any> 
-    bool __isPointerOrArray(Any v){
+    bool isPointerOrArray(Any v){
         return (std::is_pointer<Any>::value || std::is_array<Any>::value);
     };
         
     template<class Any> 
-    int __getVarTypeFromAnyType(Any v){
+    int getVarTypeFromAnyType(Any v){
         size_t typeHash = typeid(v).hash_code();
         //Null
         if (typeHash == typeid(nullptr).hash_code()){ 
@@ -124,13 +124,13 @@ private:
             return this->StringType;
         }
         //any pointer/array is considered a list, or a vector
-        else if(__isPointerOrArray(v) || 
+        else if(isPointerOrArray(v) || 
                 typeHash == typeid(std::vector<Var>).hash_code()){
             return this->ListType;
         }
         //already a Var
         else if(typeHash == typeid(Var).hash_code()){
-            return this->__VarType;
+            return this->_VarType;
         }
         else{
             //ERROR
@@ -141,15 +141,15 @@ private:
 
     //C type to Var conversion functions:
     //For Null
-    void __convertCTypeToVar(Var* var, std::nullptr_t v){
-        var->variable._len = -1;
+    void convertCTypeToVar(Var* var, std::nullptr_t v){
+        var->variable.len = -1;
         var->variable.value.n = nullptr;
     };
     //For int, float and char
-    void __convertCTypeToVar(Var* var ,const double& v){
-        var->variable._len = -1;
+    void convertCTypeToVar(Var* var ,const double& v){
+        var->variable.len = -1;
 
-        switch (var->variable._type)
+        switch (var->variable.type)
         {
         case CharType:
             var->variable.value.c = (char)v;
@@ -169,8 +169,8 @@ private:
         }
     };    
     //For String
-    void __convertCTypeToVar(Var* var, const char* v){
-        var->variable._len = strlen(v);
+    void convertCTypeToVar(Var* var, const char* v){
+        var->variable.len = strlen(v);
         var->variable.value.s = new std::string(v);
     };
     //For Lists 
@@ -178,24 +178,24 @@ private:
         TODO: ACEPTAR punteros a punteros, arrays con arrays
         usando recursividad?
     */
-    void __convertCTypeToVar(Var* var, const void* v){
+    void convertCTypeToVar(Var* var, const void* v){
         
     };
-    void __convertCTypeToVar(Var* var, vector<Var> &v){
+    void convertCTypeToVar(Var* var, vector<Var> &v){
         var->variable.value.l = new vector<Var>(v);
     };
 
     //general function to be called for C main types
     template<class Any>
-    void _convertToVar(Var* var, Any v){
-        var->variable._type = __getVarTypeFromAnyType(v);
-        __convertCTypeToVar(var, v);
+    void convertToVar(Var* var, Any v){
+        var->variable.type = getVarTypeFromAnyType(v);
+        convertCTypeToVar(var, v);
     };
 
-    void _convertToVar(Var* var, Var &v){
-        var->variable._type = v.variable._type;
-        var->variable._len = v.variable._len;
-        switch (this->variable._type)
+    void convertToVar(Var* var, Var &v){
+        var->variable.type = v.variable.type;
+        var->variable.len = v.variable.len;
+        switch (this->variable.type)
         {
         case this->NullType:
             this->variable.value.n = nullptr;
@@ -230,38 +230,38 @@ private:
 /*inner operation functions:*/
     //general:
         //float>char>int
-    void __number_basic_operation(Var *result, Var &a, Var &b, char _operation);
+    void numberBasicOperations(Var *result, Var &a, Var &b, char _operation);
 
     //addition:
-    Var _addition(Var &a, Var &b);
-    void __string_addition(Var *result, Var &a, Var &b);//concatenation
-    void __list_addition(Var *result, Var &a, Var &b);//concatenation
+    Var addition(Var &a, Var &b);
+    void stringAddition(Var *result, Var &a, Var &b);//concatenation
+    void listAddition(Var *result, Var &a, Var &b);//concatenation
     
 
 public:
     //Template operators:
     // assignment
     void operator=(Var &v){
-        this->_clearVar();
-        this->_convertToVar(this, v);
+        this->clearVar();
+        this->convertToVar(this, v);
     };
 
     template<class Any> 
     void operator=(Any v){
-        this->_clearVar();
-        this->_convertToVar(this, v);
+        this->clearVar();
+        this->convertToVar(this, v);
     };
 
     // addition
     Var operator+(Var &v){
-        return _addition(*this, v);
+        return addition(*this, v);
     };
     template<class Any> 
     Var operator+(Any v){
         Var b;
-        _convertToVar(&b, v);
+        convertToVar(&b, v);
 
-        return _addition(*this, b);
+        return addition(*this, b);
     };
 
 public:
@@ -271,15 +271,15 @@ public:
 
 private://inner functions of global functions such as list()
     template<class T, class... Args>
-    void _list(Var *p, T t, Args... args){
+    void iList(Var *p, T t, Args... args){
         Var *v = new Var(t);
         p->variable.value.l->push_back(*v);
 
-        _list(p ,args...);
+        iList(p ,args...);
     };
 
     template<class T>
-    void _list(Var *p, T t){
+    void iList(Var *p, T t){
         Var *v = new Var(t);
         (p->variable.value.l)->push_back(*v);
     } 
@@ -289,10 +289,10 @@ private://inner functions of global functions such as list()
 template<class T, class... Args>
 Var list(T t, Args... args){
     Var p;
-    p.variable._type = p.ListType;
+    p.variable.type = p.ListType;
     p.variable.value.l = new std::vector<Var>();
 
-    p._list(&p , t, args...);
+    p.iList(&p , t, args...);
 
     return p;
 }
