@@ -63,12 +63,17 @@ public:
     void printType(bool endLine = true);
     
 
+    void foo();
+
     //constructors and destructors:
     Var(){
         this->variable._type = NullType;
         this->variable.value.n = nullptr;
         this->variable._len = -1;
     };
+    Var(const Var &v){
+        _convertToVar(this, v);
+    }
     template<class Any> 
     Var(Any v){
         _convertToVar(this, v);
@@ -185,14 +190,7 @@ private:
         var->variable.value.l = new vector<Var>(v);
     };
 
-    //general function to be called for C main types
-    template<class Any>
-    void _convertToVar(Var* var, Any v){
-        var->variable._type = __getVarTypeFromAnyType(v);
-        __convertCTypeToVar(var, v);
-    };
-
-    void _convertToVar(Var* var, Var &v){
+    void _convertToVar(Var* var, const Var &v){
         var->variable._type = v.variable._type;
         var->variable._len = v.variable._len;
         switch (this->variable._type)
@@ -226,6 +224,14 @@ private:
             break;
         }
     };
+    //general function to be called for C main types
+    template<class Any>
+    void _convertToVar(Var* var, Any v){
+        var->variable._type = __getVarTypeFromAnyType(v);
+        __convertCTypeToVar(var, v);
+    };
+
+    
     
 /*inner operation functions:*/
     //general:

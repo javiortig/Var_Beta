@@ -470,11 +470,9 @@ void Var::__list_addition(Var *result, Var &_l, Var &any){
 //Constructors and destructors:
 
 /*
-
 switch (this->variable._type)
     {
     case this->NullType:
-
         break;
     case this->CharType:
         
@@ -501,6 +499,4 @@ switch (this->variable._type)
         
         break;
     }
-
 */
-
