@@ -23,7 +23,7 @@ void Var::clearVar(){
 
 }
 
-void Var::__tab(int k){
+void Var::pTab(int k){
     for(int i = 0; i < k; i++){
         cout << "    ";
     }
@@ -31,11 +31,11 @@ void Var::__tab(int k){
 
 //Methods:
 void Var::print(bool pretty, bool endLine){
-    static int recursive_depth = -1;
-    recursive_depth++;
+    static int recursiveDepth = -1;
+    recursiveDepth++;
 
     if(pretty && (this->variable.type != ListType)) 
-        __tab(recursive_depth);
+        pTab(recursiveDepth);
 
     switch (this->variable.type)
     {
@@ -60,12 +60,12 @@ void Var::print(bool pretty, bool endLine){
     case this->ListType:
         if (pretty){
             //Prints in cascade (JSON-like)
-            __tab(recursive_depth);
+            pTab(recursiveDepth);
             std::cout << '{' << endl;
             for (size_t i=0; i < this->variable.value.l->size(); i++){
                 this->variable.value.l->at(i).print(true, true);
             }
-            __tab(recursive_depth);
+            pTab(recursiveDepth);
             std::cout << '}';
         }
         else{
@@ -92,7 +92,7 @@ void Var::print(bool pretty, bool endLine){
 
     if(endLine) cout << endl;
 
-    recursive_depth--;
+    recursiveDepth--;
 }
 
 void Var::printType(bool endLine){
@@ -343,8 +343,8 @@ Var Var::addition(Var &a, Var &b){
 
     return result;
 }
-void Var::numberBasicOperations(Var *result, Var &a, Var &b, char _operation){
-    switch (_operation)
+void Var::numberBasicOperations(Var *result, Var &a, Var &b, char operation){
+    switch (operation)
     {
     case '+':     
         switch (a.variable.type)

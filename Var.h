@@ -43,7 +43,7 @@ private:
     }variable;
     //inside methods
     void clearVar();
-    void __tab(int k = 0); //couts a tab as many times as k
+    void pTab(int k = 0); //couts a tab as many times as k
 
 public:
     //type constants
