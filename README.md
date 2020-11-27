@@ -20,6 +20,4 @@ it's a fast approach.
 Well, that might be true, but I like the idea of combining the   simplicity of high level languages(interpreted) with the amazing   features of c++ such as efficiency  
 
 ### + Isn't this a waste of memory?
-It is, but I will always try to make variables use the least memory   possible. IMO thought, efficiency is much more important in most of  
-the cases. The Var type is not thought to be used in limited-memory  
-proyects
+It is, but I will always try to make variables use the least memory   possible. IMO thought, efficiency is much more important in most of the cases. The Var type is not thought to be used in limited-memory proyects
