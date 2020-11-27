@@ -71,9 +71,7 @@ public:
         this->variable.value.n = nullptr;
         this->variable._len = -1;
     };
-    Var(const Var &v){
-        _convertToVar(this, v);
-    }
+
     template<class Any> 
     Var(Any v){
         _convertToVar(this, v);
