@@ -52,7 +52,7 @@ void Var::print(bool pretty, bool endLine){
         std::cout << this->variable.value.f;
         break;
     case this->BoolType:
-        std::cout << this->variable.value.b;
+        std::cout << ((this->variable.value.b)? "True":"False");
         break;
     case this->StringType: 
         std::cout <<  '\"' <<*this->variable.value.s << '\"';
@@ -470,9 +470,11 @@ void Var::__list_addition(Var *result, Var &_l, Var &any){
 //Constructors and destructors:
 
 /*
+
 switch (this->variable._type)
     {
     case this->NullType:
+
         break;
     case this->CharType:
         
@@ -499,4 +501,5 @@ switch (this->variable._type)
         
         break;
     }
+
 */
